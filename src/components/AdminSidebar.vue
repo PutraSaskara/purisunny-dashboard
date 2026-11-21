@@ -14,7 +14,7 @@
       </router-link>
       <button
         type="button"
-        class="lg:hidden w-10 h-10 -mr-2 flex items-center justify-center rounded-lg text-white/70 hover:text-white hover:bg-white/10 transition-colors"
+        class="lg:hidden w-11 h-11 -mr-2 flex items-center justify-center rounded-lg text-white/70 hover:text-white hover:bg-white/10 transition-colors"
         aria-label="Close menu"
         @click="emit('close')"
       >
@@ -40,6 +40,28 @@
           <rect x="14" y="14" width="7" height="7" rx="1"/>
         </svg>
         Dashboard
+      </router-link>
+
+      <router-link
+        to="/bookings"
+        class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-colors"
+        @click="emit('close')"
+        :class="isActive('/bookings') ? 'bg-brand-forest text-white' : 'text-white/70 hover:text-white hover:bg-white/10'"
+      >
+        <svg class="w-5 h-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="3" y="4" width="18" height="18" rx="2"/>
+          <line x1="16" y1="2" x2="16" y2="6"/>
+          <line x1="8" y1="2" x2="8" y2="6"/>
+          <line x1="3" y1="10" x2="21" y2="10"/>
+        </svg>
+        <span>Bookings</span>
+        <span
+          v-if="newLeads > 0"
+          class="ml-auto inline-flex items-center justify-center min-w-[1.4rem] px-1.5 py-0.5 rounded-full bg-amber-400 text-brand-forest-dark text-xs font-semibold tabular-nums"
+          aria-label="New booking leads"
+        >
+          {{ newLeads > 99 ? '99+' : newLeads }}
+        </span>
       </router-link>
 
       <router-link
@@ -118,8 +140,9 @@
 </template>
 
 <script setup>
+import { ref, onMounted } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
-import { isAdmin } from '../api'
+import { isAdmin, booking } from '../api'
 import { clearAuth } from '../authStorage'
 
 defineProps({
@@ -141,6 +164,19 @@ function isActive(path) {
   }
   return route.path.startsWith(path)
 }
+
+// Unread booking count for the Bookings badge. Best-effort: a failure (or a
+// role/token edge case) just leaves the badge hidden.
+const newLeads = ref(0)
+
+onMounted(async () => {
+  try {
+    const data = await booking.list({ page: 1, per_page: 1 })
+    newLeads.value = data && data.counts ? Number(data.counts.new) || 0 : 0
+  } catch {
+    newLeads.value = 0
+  }
+})
 
 function handleLogout() {
   clearAuth()

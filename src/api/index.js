@@ -138,6 +138,30 @@ export const redirects = {
   delete: (id) => request(`/redirects/${id}`, { method: 'DELETE' }),
 }
 
+// Booking-lead inbox (admin + editor; `remove` and `stats` are admin-only on
+// the server, so a role rejection comes back as a normal 403 error body).
+export const booking = {
+  list: (params = {}) => {
+    const query = new URLSearchParams()
+    Object.entries(params).forEach(([key, value]) => {
+      if (value === undefined || value === null || value === '') return
+      query.set(key, String(value))
+    })
+    const qs = query.toString()
+    return request(`/booking/leads${qs ? `?${qs}` : ''}`)
+  },
+  get: (id) => request(`/booking/leads/${encodeURIComponent(id)}`),
+  updateStatus: (id, status) => request(`/booking/leads/${encodeURIComponent(id)}`, {
+    method: 'PATCH',
+    body: JSON.stringify({ status }),
+  }),
+  resendEmail: (id) => request(`/booking/leads/${encodeURIComponent(id)}/resend-email`, {
+    method: 'POST',
+  }),
+  remove: (id) => request(`/booking/leads/${encodeURIComponent(id)}`, { method: 'DELETE' }),
+  stats: (days = 7) => request(`/booking/stats?days=${encodeURIComponent(days)}`),
+}
+
 export const upload = {
   image: (file) => {
     const formData = new FormData()

@@ -4,7 +4,7 @@
     <div class="lg:hidden fixed top-0 inset-x-0 z-20 h-14 bg-white border-b border-gray-200 flex items-center gap-3 px-4">
       <button
         type="button"
-        class="w-10 h-10 -ml-2 flex items-center justify-center rounded-lg text-gray-600 hover:bg-gray-100 transition-colors"
+        class="w-11 h-11 -ml-2 flex items-center justify-center rounded-lg text-gray-600 hover:bg-gray-100 transition-colors"
         aria-label="Open menu"
         @click="sidebarOpen = true"
       >

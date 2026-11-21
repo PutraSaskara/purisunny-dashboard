@@ -8,11 +8,13 @@ import Categories from '../views/Categories.vue'
 import SeoPages from '../views/SeoPages.vue'
 import SeoPageForm from '../views/SeoPageForm.vue'
 import Redirects from '../views/Redirects.vue'
+import BookingLeads from '../views/BookingLeads.vue'
 
 const routes = [
   { path: '/', redirect: '/dashboard' },
   { path: '/login', name: 'Login', component: Login },
   { path: '/dashboard', name: 'Dashboard', component: Dashboard, meta: { requiresAuth: true } },
+  { path: '/bookings', name: 'Bookings', component: BookingLeads, meta: { requiresAuth: true } },
   { path: '/articles', name: 'Articles', component: Articles, meta: { requiresAuth: true } },
   { path: '/articles/new', name: 'ArticleNew', component: ArticleForm, meta: { requiresAuth: true } },
   { path: '/articles/:id/edit', name: 'ArticleEdit', component: ArticleForm, meta: { requiresAuth: true } },
