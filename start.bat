@@ -1,0 +1,5 @@
+@echo off
+cd /d "%~dp0"
+call npm run build
+call npm run preview
+pause
